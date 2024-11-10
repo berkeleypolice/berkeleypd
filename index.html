@@ -1,19 +1,33 @@
 <html>
-
 <head>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script>
-        function onSubmit() {
-            document.getElementById("myForm").submit()
-        }
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={your-site-key}"></script>
 </head>
 
 <body>
-    <form id="myForm" action="https://formspree.io/f/xovqwval" method="POST">
-        <input name="email" type="email">
-        <button class="g-recaptcha" data-sitekey="6LfSPHoqAAAAAFwjh8dMGfIBkPvKP941t-p3SOkH"
-            data-callback='onSubmit' data-action='submit'>Submit</button>
-    </form>
-</body>
-</html>
+    <button onclick="captcha()" class="btn btn-primary">click me</button>
+    <script>
+      function captcha() {
+        grecaptcha.ready(function() {
+          grecaptcha.execute('{6LfSPHoqAAAAAFwjh8dMGfIBkPvKP941t-p3SOkH}', {action: 'submit'}).then(function(token) {
+              $.ajax({
+                url: "https://formspree.io/f/xovqwval",
+                method: "POST",
+                dataType: "json",
+                data: {
+                  email: "test@email.com",
+                  message: "Hello world!",
+                  "g-recaptcha-response": token
+                },
+                success: () => {
+                  alert("Done!")
+                },
+                error: (err) => {
+                  alert("Something wrong!", err)
+                }
+              });
+          });
+        });
+      }
+  </script>
+<html>
